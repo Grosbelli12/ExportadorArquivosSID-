@@ -1,0 +1,4 @@
+build/
+dist/
+_pycache__/
+.giignore

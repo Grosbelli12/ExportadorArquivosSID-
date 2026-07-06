@@ -32,7 +32,19 @@ def abrir_calendario_inicio():
     # Cria um popup para o calendário
     janela_calendario = ctk.CTkToplevel(app)
     janela_calendario.title("Escolher Data")
-    janela_calendario.geometry("300x300")
+
+    # Força a janela a ficar por cima de tudo
+    janela_calendario.attributes("-topmost", True)
+
+
+    # Puxa o foco do teclado/mouse para ela
+    janela_calendario.focus()
+    
+    # Pega a posição EXATA do botão no eixo x e y 
+    pos_x = btn_abrir.winfo_rootx()
+    pos_y = btn_abrir.winfo_rooty()
+
+    janela_calendario.geometry(f"300x300+{pos_x}+{pos_y - 48 }")
 
     # Cria o calendário date_pattern já formata do jeito que o Postgres utiliza
     calendario = Calendar(janela_calendario, selectmode='day', date_pattern='yyyy-mm-dd')
@@ -44,7 +56,6 @@ def abrir_calendario_inicio():
         input_data_inicio.insert(0, data_escolhida) # Insere a nova data no input
         janela_calendario.destroy()  
     
-        
     btn_confirmar = ctk.CTkButton(janela_calendario, text="Confirmar", command=confirmar_data)
     btn_confirmar.pack(pady=10)
 
@@ -53,7 +64,13 @@ def abrir_calendario_fim():
     # Cria um popup para o calendário
     janela_calendario = ctk.CTkToplevel(app)
     janela_calendario.title("Escolher Data")
-    janela_calendario.geometry("300x300")
+    janela_calendario.attributes("-topmost", True)
+    janela_calendario.focus()
+    
+    pos_x = btn_abrir.winfo_rootx()
+    pos_y = btn_abrir.winfo_rooty()
+    
+    janela_calendario.geometry(f"300x300+{pos_x}+{pos_y}")
 
     # Cria o calendário date_pattern já formata do jeito que o Postgres utiliza
     calendario = Calendar(janela_calendario, selectmode='day', date_pattern='yyyy-mm-dd')
@@ -159,7 +176,14 @@ btn_abrir = ctk.CTkButton(frame_data_fim, text="📅", command=abrir_calendario_
 btn_abrir.pack(side="left")
 
 
-# 5. Menu Dropdown para o Módulo
+
+
+frame_modulo = ctk.CTkFrame(app, fg_color="transparent")
+frame_modulo.pack(pady=10)
+
+modulo = ctk.CTkLabel(frame_modulo, text="Selecione o Módulo", font=("Arial", 14), width=130, anchor="e")
+modulo.pack(side="left", padx=(0, 10))    
+
 opcoes_modulos = [
     "0 - Todos",
     "1 - Cadastro de Cliente",
@@ -173,13 +197,12 @@ opcoes_modulos = [
     "9 - Contas a Receber",
     "10 - Cheque de Terceiros         "
 ]
-combo_modulo = ctk.CTkComboBox(app, values=opcoes_modulos, width=220)
+combo_modulo = ctk.CTkComboBox(frame_modulo, values=opcoes_modulos, width=220)
 combo_modulo.set("0 - Todos") 
-combo_modulo.pack(pady=10)
+combo_modulo.pack(side="right", padx=(0, 60))
 
 button_exportar = ctk.CTkButton(app, text="Exportar Arquivos", command=iniciar_exportacao, width=220, hover_color="#3878D8", corner_radius=10)
-button_exportar.pack(pady=10)
-
+button_exportar.pack(pady=30, padx=(140, 60))
 
 label_aviso = ctk.CTkLabel(app, text="", font=("Arial", 14))
 label_aviso.pack(pady=10)
