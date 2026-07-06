@@ -1,4 +1,13 @@
+chave.key
+dados_conexao.txt
+
+*.csv
+*.txt
+*.sql
+*.xlsx
+*.fr3
+
 build/
 dist/
-_pycache__/
-.giignore
+*.spec
+__pycache__/
