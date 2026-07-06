@@ -8,6 +8,19 @@ def valida_data(data):
         return True
     return False
 
+def testar_conexao(ip, nome_banco, usuario, senha):
+    try:
+        conexao = psycopg2.connect(
+            host=ip,
+            database=nome_banco,
+            user=usuario,
+            password=senha
+        )
+        conexao.close()
+        return True, "Conexão bem-sucedida!"
+    except Exception as erro:
+        return False, f"Erro ao conectar ao banco de dados: {erro}"
+    
 def processar_exportacao(ip, nome_banco, usuario, senha, cliente, data_inicio, data_fim, opcao_modulo):
     if not cliente.isdigit():
         return False, "Erro: Código de cliente inválido. Digite apenas números."

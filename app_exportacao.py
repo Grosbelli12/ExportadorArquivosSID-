@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import os
 from tkcalendar import Calendar
-from baixar_arquivos import processar_exportacao
+from baixar_arquivos import processar_exportacao, testar_conexao
 from cryptography.fernet import Fernet
 
 # Configuração da janela principal
@@ -26,8 +26,19 @@ def salvar_dados():
     nome_banco = input_nome_banco.get()
     usuario = input_usuario.get()
     senha_digitada = input_senha.get()
-    senha = fernet.encrypt(senha_digitada.encode()).decode()
+    
+    if not ip or not nome_banco or not usuario or not senha_digitada:
+        label_aviso_conexao.configure(text="Todos os campos devem ser preenchidos!", text_color="red")
+        return
 
+    deu_certo, mensagem = testar_conexao(ip, nome_banco, usuario, senha_digitada)
+
+    if not deu_certo:
+        label_aviso_conexao.configure(text=mensagem, text_color="red")
+        return
+
+    senha = fernet.encrypt(senha_digitada.encode()).decode()
+    
     with open("dados_conexao.txt", "w") as arquivo:
         arquivo.write(f"{ip}\n{nome_banco}\n{usuario}\n{senha}")
 
@@ -171,6 +182,9 @@ senha.pack(side="right")
 
 btn_salvar = ctk.CTkButton(pagina_conexao, text="Salvar Dados", command=salvar_dados,  width=220, hover_color="#3878D8", corner_radius=10)
 btn_salvar.pack(pady=10, padx=(140, 60))
+
+label_aviso_conexao = ctk.CTkLabel(pagina_conexao, text="", font=("Arial", 14), wraplength=650)
+label_aviso_conexao.pack(pady=10)
 
 
 
