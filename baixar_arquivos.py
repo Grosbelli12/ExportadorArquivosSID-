@@ -1,6 +1,9 @@
 import re
+import os
 from datetime import datetime
 import psycopg2
+
+os.makedirs("Arquivos_Exportados", exist_ok=True)
 
 def valida_data(data):
     regex = r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
@@ -91,9 +94,11 @@ def processar_exportacao(ip, nome_banco, usuario, senha, cliente, data_inicio, d
         for linha in resultados:
             nome01_arq = linha[0]
             docume_arq = linha[1]
-
+            
+            caminho_final = os.path.join("Arquivos_Exportados", nome01_arq)
+            
             if docume_arq is not None:
-                with open(nome01_arq, 'wb') as arquivo:
+                with open(caminho_final, 'wb') as arquivo:
                     arquivo.write(docume_arq)
                     arquivos_baixados += 1
         

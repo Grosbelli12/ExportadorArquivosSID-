@@ -9,15 +9,18 @@ app = ctk.CTk()
 app.geometry("700x700")
 app.title("Exportador de Arquivos")
 
+os.makedirs("base", exist_ok=True)
+
+
 # Cria uma chave mestra para criptografia se não existir
 if not os.path.exists("chave.key"):
     chave_nova = Fernet.generate_key()
-    with open("chave.key", "wb") as arquivo_chave:
+    with open("base/chave.key", "wb") as arquivo_chave:
         arquivo_chave.write(chave_nova)
     
     # Carregamos a chave para a memória do programa 
     # fernet é o cofre que vai criptografar e descriptografar os dados
-with open("chave.key", "rb") as arquivo_chave:
+with open("base/chave.key", "rb") as arquivo_chave:
     chave_mestra = arquivo_chave.read()
     fernet = Fernet(chave_mestra) 
     
@@ -39,7 +42,7 @@ def salvar_dados():
 
     senha = fernet.encrypt(senha_digitada.encode()).decode()
     
-    with open("dados_conexao.txt", "w") as arquivo:
+    with open("base/dados_conexao.txt", "w") as arquivo:
         arquivo.write(f"{ip}\n{nome_banco}\n{usuario}\n{senha}")
 
     label_aviso.configure(text="Dados salvos com sucesso!", text_color="green")
@@ -263,8 +266,8 @@ label_aviso = ctk.CTkLabel(pagina_exportacao, text="", font=("Arial", 14))
 label_aviso.pack(pady=10)
 
 
-if os.path.exists("dados_conexao.txt"):
-    with open("dados_conexao.txt", "r") as arquivo:
+if os.path.exists("base/dados_conexao.txt"):
+    with open("base/dados_conexao.txt", "r") as arquivo:
         linhas = arquivo.readlines()
         ip_salvo = linhas[0].strip()
         nome_banco_salvo = linhas[1].strip()
